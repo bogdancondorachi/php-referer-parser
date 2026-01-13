@@ -1,0 +1,39 @@
+{
+    "name": "simplestats/referer-parser",
+    "description": "Snowplow Refer(r)er parser for PHP",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Bogdan Condorachi",
+            "role": "Maintainer",
+            "email": "bogdan.condorachi@gmail.com"
+        },
+        {
+            "name": "Lars Strojny",
+            "role": "Creator"
+        }
+    ],
+    "require": {
+        "php": ">=8.2"
+    },
+    "replace": {
+        "snowplow/referer-parser": "*"
+    },
+    "suggest": {
+        "symfony/yaml": "Required for YamlConfigReader support"
+    },
+    "autoload": {
+        "psr-4": {
+            "Snowplow\\RefererParser\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+          "Snowplow\\RefererParser\\Tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11"
+    }
+}

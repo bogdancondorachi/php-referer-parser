@@ -1,18 +1,29 @@
-# referer-parser PHP library
+# ❄️ PHP Snowplow Referer Parser
 
-This is the PHP implementation of [referer-parser][referer-parser], the library for extracting search marketing data from referer _(sic)_ URLs.
+A modern PHP implementation of [referer-parser](https://github.com/snowplow-referer-parser/referer-parser), the library for extracting **traffic attribution data** from referer _(sic)_ URLs.
 
-The implementation uses the shared 'database' of known referers found in [`referers.yml`][referers-yml].
+The implementation uses a JSON version of the shared `database` of known referers found in [`referers.yml`](https://github.com/snowplow-referer-parser/referer-parser/blob/master/resources/referers.yml).
 
-The PHP version of referer-parser is maintained by [Lars Strojny][lstrojny].
+🔱 This repository is a maintained fork of the original [php-referer-parser](https://github.com/snowplow-referer-parser/php-referer-parser) created by [Lars Strojny](https://github.com/lstrojny), updated for modern PHP versions and ongoing data updates.
 
-## Installation
+## ✨ Key Features
+- 🌍 Parse referer URLs into structured attribution data
+- 🧭 Identify traffic source and medium (search, social, email, etc.)
+- 📝 Extract search terms from supported search engines
+- 📦 Based on Snowplow’s shared referer database
+- ⚡ Modern PHP 8.2+ implementation
+- 🔁 Regularly updated referer data
 
+## 🧩 Requirements
+- **PHP** ≥ 8.2
+
+## 📦 Installation
+
+```bash
+composer require simplestats/referer-parser
 ```
-php composer.phar require snowplow/referer-parser dev-master
-```
 
-## Usage
+## 🚀 Usage
 
 ```php
 use Snowplow\RefererParser\Parser;
@@ -24,37 +35,23 @@ $referer = $parser->parse(
 );
 
 if ($referer->isKnown()) {
-    echo $referer->getMedium(); // "Search"
-    echo $referer->getSource(); // "Google"
-    echo $referer->getSearchTerm();   // "gateway oracle cards denise linn"
+    echo $referer->medium;     // Medium::SEARCH
+    echo $referer->source;     // "Google"
+    echo $referer->searchTerm; // "gateway oracle cards denise linn"
 }
 ```
 
-## Copyright and license
+## 🤝 Contributing
+1. Fork this repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create new pull request
 
-The referer-parser PHP library is distributed under the MIT License.
+## 🙏 Credits
+- 🧠 [Snowplow](https://github.com/snowplow) for the original [referer-parser](https://github.com/snowplow-referer-parser/referer-parser) library
+- 👤 [Lars Strojny](https://github.com/lstrojny) for the original [php-referer-parser](https://github.com/snowplow-referer-parser/php-referer-parser)
 
-Copyright (c) 2013 Lars Strojny.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
-[referer-parser]: https://github.com/snowplow/referer-parser
-[referers-yml]: https://github.com/snowplow/referer-parser/blob/master/resources/referers.yml
-
-[lstrojny]: https://github.com/lstrojny
+## 📜 License
+[MIT License](./LICENSE) Copyright © 2026-PRESENT [Bogdan Condorachi](https://github.com/bogdancondorachi)\
+[MIT License](https://github.com/snowplow-referer-parser/php-referer-parser/blob/develop/MIT-LICENSE.txt) Copyright © 2013-PRESENT [Lars Strojny](https://github.com/lstrojny)

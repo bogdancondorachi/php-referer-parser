@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Snowplow\RefererParser;
 
-enum Medium: string implements \Stringable
+enum Medium: string
 {
     case SEARCH = 'search';
     case SOCIAL = 'social';

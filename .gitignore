@@ -1,0 +1,10 @@
+# OS files
+.DS_Store
+
+# Composer
+vendor/
+
+# PHPUnit
+/.phpunit.cache
+/tests/coverage
+/tests/*/tmp
