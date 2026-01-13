@@ -1,56 +1,50 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Snowplow\RefererParser\Config;
 
 use Snowplow\RefererParser\Exception\InvalidArgumentException;
 
 trait ConfigFileReaderTrait
 {
-    /** @var string */
-    protected $fileName;
+    protected string $fileName;
+    protected array $referers = [];
 
-    /** @var array */
-    protected $referers = [];
-
-    protected function init($fileName)
+    protected function init(string $fileName): void
     {
         if (!file_exists($fileName)) {
             throw InvalidArgumentException::fileNotExists($fileName);
         }
 
         $this->fileName = $fileName;
-        
         $this->read();
     }
 
-    abstract protected function parse($content);
+    abstract protected function parse(string $content): array;
 
-    protected function read()
+    protected function read(): void
     {
-        if ($this->referers) {
-            return;
+        if (!empty($this->referers)) return;
+
+        $content = file_get_contents($this->fileName);
+        if ($content === false) {
+            throw InvalidArgumentException::fileNotReadable($this->fileName);
         }
 
-        $hash = $this->parse(file_get_contents($this->fileName));
- 
+        $hash = $this->parse($content);
+
         foreach ($hash as $medium => $referers) {
             foreach ($referers as $source => $referer) {
                 foreach ($referer['domains'] as $domain) {
-                    $parameters = isset($referer['parameters']) ? $referer['parameters'] : [];
+                    $parameters = $referer['parameters'] ?? [];
                     $this->addReferer($domain, $source, $medium, $parameters);
                 }
             }
         }
     }
-    
-    /**
-     * Add referer
-     * 
-     * @param string $domain 
-     * @param string $source
-     * @param string $medium
-     * @param array $parameters
-     */
-    public function addReferer($domain, $source, $medium, array $parameters = [])
+
+    public function addReferer(string $domain, string $source, string $medium, array $parameters = []): void
     {
         $this->referers[$domain] = [
             'source' => $source,
@@ -59,14 +53,8 @@ trait ConfigFileReaderTrait
         ];
     }
 
-    /**
-     * Lookup host
-     * 
-     * @param string $lookupString
-     * @return array|null
-     */
-    public function lookup($lookupString)
+    public function lookup(string $lookupString): ?array
     {
-        return isset($this->referers[$lookupString]) ? $this->referers[$lookupString] : null;
+        return $this->referers[$lookupString] ?? null;
     }
 }

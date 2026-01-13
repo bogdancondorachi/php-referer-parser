@@ -1,17 +1,15 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Snowplow\RefererParser;
 
-final class Medium
+enum Medium: string implements \Stringable
 {
-    const SEARCH = 'search';
-
-    const SOCIAL = 'social';
-
-    const UNKNOWN = 'unknown';
-
-    const INTERNAL = 'internal';
-
-    const EMAIL = 'email';
-
-    const INVALID = 'invalid';
+    case SEARCH = 'search';
+    case SOCIAL = 'social';
+    case UNKNOWN = 'unknown';
+    case INTERNAL = 'internal';
+    case EMAIL = 'email';
+    case INVALID = 'invalid';
 }

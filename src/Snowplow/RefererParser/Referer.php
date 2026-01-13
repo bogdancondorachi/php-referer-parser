@@ -1,78 +1,64 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Snowplow\RefererParser;
 
-class Referer
+final readonly class Referer
 {
-    /** @var string */
-    protected $medium;
+    public Medium $medium;
+    public ?string $source;
+    public ?string $searchTerm;
 
-    /** @var string */
-    protected $source;
-
-    /** @var string|null */
-    protected $searchTerm;
-
-    protected function __construct()
-    {}
-
-    public static function createKnown($medium, $source, $searchTerm = null)
+    protected function __construct(Medium $medium, ?string $source = null, ?string $searchTerm = null)
     {
-        $referer = new self();
-        $referer->medium = $medium;
-        $referer->source = $source;
-        $referer->searchTerm = $searchTerm;
-
-        return $referer;
+        $this->medium = $medium;
+        $this->source = $source;
+        $this->searchTerm = $searchTerm;
     }
 
-    public static function createUnknown()
+    public static function createKnown(Medium $medium, string $source, ?string $searchTerm = null): self
     {
-        $referer = new self();
-        $referer->medium = Medium::UNKNOWN;
-
-        return $referer;
+        return new self($medium, $source, $searchTerm);
     }
 
-    public static function createInternal()
+    public static function createUnknown(): self
     {
-        $referer = new self();
-        $referer->medium = Medium::INTERNAL;
-
-        return $referer;
+        return new self(Medium::UNKNOWN);
     }
 
-    public static function createInvalid()
+    public static function createInternal(): self
     {
-        $referer = new self();
-        $referer->medium = Medium::INVALID;
-
-        return $referer;
+        return new self(Medium::INTERNAL);
     }
 
-    /** @return boolean */
-    public function isValid()
+    public static function createInvalid(): self
+    {
+        return new self(Medium::INVALID);
+    }
+
+    public function isValid(): bool
     {
         return $this->medium !== Medium::INVALID;
     }
 
-    /** @return boolean */
-    public function isKnown()
+    public function isKnown(): bool
     {
         return !in_array($this->medium, [Medium::UNKNOWN, Medium::INTERNAL, Medium::INVALID], true);
     }
 
-    /** @return string */
-    public function getMedium()
+    // Backward-compatible getters
+    public function getMedium(): Medium
     {
         return $this->medium;
     }
 
-    public function getSource()
+    public function getSource(): ?string
     {
         return $this->source;
     }
 
-    public function getSearchTerm()
+    public function getSearchTerm(): ?string
     {
         return $this->searchTerm;
     }

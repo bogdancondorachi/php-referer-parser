@@ -1,11 +1,10 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Snowplow\RefererParser\Config;
 
 interface ConfigReaderInterface
 {
-    /**
-     * @param string $lookupString
-     * @return array
-     */
-    public function lookup($lookupString);
+    public function lookup(string $lookupString): array|null;
 }
