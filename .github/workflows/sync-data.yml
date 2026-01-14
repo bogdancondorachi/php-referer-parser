@@ -1,0 +1,43 @@
+name: Sync Referer Data
+
+on:
+  schedule:
+    - cron: '0 3 1-7 * 1'
+  workflow_dispatch:
+
+jobs:
+  sync-referer:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download referers-latest.yaml
+        run: |
+          curl -sS -o data/referer.yml https://s3-eu-west-1.amazonaws.com/snowplow-hosted-assets/third-party/referer-parser/referers-latest.yaml
+
+      - name: Download referers-latest.json
+        run: |
+          curl -sS -o data/referer.json https://s3-eu-west-1.amazonaws.com/snowplow-hosted-assets/third-party/referer-parser/referers-latest.json
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git add data/referer.yml data/referer.json
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit and push changes
+        uses: EndBug/add-and-commit@v9
+        if: steps.check_changes.outputs.changed == 'true'
+        with:
+          add: 'data/referer.yml,data/referer.json'
+          message: 'sync: referer data [skip ci]'
+          author_name: Bogdan Condorachi
+          author_email: bogdan.condorachi@gmail.com
+          committer_name: GitHub Actions
+          committer_email: 41898282+github-actions[bot]@users.noreply.github.com
