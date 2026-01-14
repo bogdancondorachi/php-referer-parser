@@ -15,13 +15,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Download referers-latest.yaml
+      - name: Download referers YAML
         run: |
-          curl -sS -o data/referers.yml https://s3-eu-west-1.amazonaws.com/snowplow-hosted-assets/third-party/referer-parser/referers-latest.yaml
+          curl -fsS -o data/referers.yml \
+            "https://s3-eu-west-1.amazonaws.com/snowplow-hosted-assets/third-party/referer-parser/referers-$(date +%Y%m%d).yaml" \
+          || curl -fsS -o data/referers.yml \
+            "https://s3-eu-west-1.amazonaws.com/snowplow-hosted-assets/third-party/referer-parser/referers-$(date -d yesterday +%Y%m%d).yaml"
 
-      - name: Download referers-latest.json
+      - name: Download referers JSON
         run: |
-          curl -sS -o data/referers.json https://s3-eu-west-1.amazonaws.com/snowplow-hosted-assets/third-party/referer-parser/referers-latest.json
+          curl -fsS -o data/referers.json \
+            "https://s3-eu-west-1.amazonaws.com/snowplow-hosted-assets/third-party/referer-parser/referers-$(date +%Y%m%d).json" \
+          || curl -fsS -o data/referers.json \
+            "https://s3-eu-west-1.amazonaws.com/snowplow-hosted-assets/third-party/referer-parser/referers-$(date -d yesterday +%Y%m%d).json"
 
       - name: Check for changes
         id: check_changes
