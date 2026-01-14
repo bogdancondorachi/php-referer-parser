@@ -1,10 +1,10 @@
 # ❄️ PHP Snowplow Referer Parser
 
-A modern PHP implementation of [referer-parser](https://github.com/snowplow-referer-parser/referer-parser), the library for extracting **traffic attribution data** from referer _(sic)_ URLs.
+A modern PHP implementation of [referer-parser](https://github.com/snowplow-referer-parser/referer-parser), the library for extracting **traffic data** from referer _(sic)_ URLs.
 
 The implementation uses a JSON version of the shared `database` of known referers found in [`referers.yml`](https://github.com/snowplow-referer-parser/referer-parser/blob/master/resources/referers.yml).
 
-🔱 This repository is a maintained fork of the original [php-referer-parser](https://github.com/snowplow-referer-parser/php-referer-parser) created by [Lars Strojny](https://github.com/lstrojny), updated for modern PHP versions and ongoing data updates.
+🔱 Maintained PHP 8.2+ fork of [php-referer-parser](https://github.com/snowplow-referer-parser/php-referer-parser) by [Lars Strojny](https://github.com/lstrojny), with automatic data updates.
 
 ## ✨ Key Features
 - 🌍 Parse referer URLs into structured attribution data
@@ -42,11 +42,7 @@ if ($referer->isKnown()) {
 ```
 
 ## 🤝 Contributing
-1. Fork this repository
-2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create new pull request
+Fork & PR are welcome.
 
 ## 🙏 Credits
 - 🧠 [Snowplow](https://github.com/snowplow) for the original [referer-parser](https://github.com/snowplow-referer-parser/referer-parser) library
