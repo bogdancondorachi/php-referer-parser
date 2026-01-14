@@ -1,40 +1,55 @@
 <?php
 namespace Snowplow\RefererParser\Tests\Config;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Snowplow\RefererParser\Config\ConfigReaderInterface;
+use Snowplow\RefererParser\Exception\InvalidArgumentException;
 
 abstract class AbstractConfigReaderTest extends TestCase
 {
-    /** @return ConfigReaderInterface */
-    abstract protected function createConfigReader($fileName);
+	/** @return ConfigReaderInterface */
+	abstract protected function createConfigReader(string $fileName): ConfigReaderInterface;
 
-    public function testExceptionIsThrownIfFileDoesNotExist()
-    {
-        $this->setExpectedException(
-            'Snowplow\RefererParser\Exception\InvalidArgumentException',
-            'File "INVALIDFILE" does not exist'
-        );
-        $this->createConfigReader('INVALIDFILE');
-    }
-    
-    public function testAddReferer()
-    {
-        $reader = $this->createConfigReaderFromFile();
-        $this->assertNull($reader->addReferer("intra.example.com", "Custom search", "search", ['searchq']));
-        
-        $res = $reader->lookup("intra.example.com");
-        $this->assertArrayHasKey('source', $res);
-        $this->assertArrayHasKey('medium', $res);
-        $this->assertNotEmpty('parameters', $res);
-        
-        $this->assertNull($reader->lookup("nosearch.example.com"));
-    }
-    
-    public function testErrorOnAddingWrongReferer()
-    {
-        $reader = $this->createConfigReaderFromFile();
-        $this->setExpectedException('Exception');
-        $this->assertNull($reader->addReferer("intra.example.com", "Custom search", "search", 'noarray'));
-    }
+	/** @return ConfigReaderInterface */
+	abstract protected function createConfigReaderFromFile(): ConfigReaderInterface;
+
+	public function testExceptionIsThrownIfFileDoesNotExist(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('File "INVALIDFILE" does not exist');
+
+		$this->createConfigReader('INVALIDFILE');
+	}
+
+	public function testAddReferer(): void
+	{
+		$reader = $this->createConfigReaderFromFile();
+
+		// Adding referer should return null
+		$this->assertNull($reader->addReferer(
+			'intra.example.com',
+			'Custom search',
+			'search',
+			['searchq']
+		));
+
+		$res = $reader->lookup('intra.example.com');
+
+		$this->assertArrayHasKey('source', $res);
+		$this->assertArrayHasKey('medium', $res);
+		$this->assertArrayHasKey('parameters', $res);
+
+		// Lookup for non-existing referer should return null
+		$this->assertNull($reader->lookup('nosearch.example.com'));
+	}
+
+	public function testErrorOnAddingWrongReferer(): void
+	{
+		$reader = $this->createConfigReaderFromFile();
+
+		$this->expectException(\TypeError::class);
+
+		// Passing a string instead of array for parameters should throw TypeError
+		$reader->addReferer('intra.example.com', 'Custom search', 'search', 'noarray');
+	}
 }

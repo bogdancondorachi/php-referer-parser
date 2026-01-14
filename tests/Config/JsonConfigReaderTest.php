@@ -5,13 +5,13 @@ use Snowplow\RefererParser\Config\JsonConfigReader;
 
 class JsonConfigReaderTest extends AbstractConfigReaderTest
 {
-    protected function createConfigReader($fileName)
-    {
-        return new JsonConfigReader($fileName);
-    }
-    
-    protected function createConfigReaderFromFile()
-    {
-        return $this->createConfigReader(__DIR__ . '/../../../../../data/referers.json');
-    }
+	protected function createConfigReader(string $fileName): JsonConfigReader
+	{
+		return new JsonConfigReader($fileName);
+	}
+
+	protected function createConfigReaderFromFile(): JsonConfigReader
+	{
+		return $this->createConfigReader(dirname(__DIR__, 2) . '/data/referers.json');
+	}
 }

@@ -1,10 +1,11 @@
 # OS files
 .DS_Store
 
-# Composer
+# Vendor files
 vendor/
 
-# PHPUnit
+# Cache and temporary files
+/.php-cs-fixer.cache
 /.phpunit.cache
 /tests/coverage
 /tests/*/tmp

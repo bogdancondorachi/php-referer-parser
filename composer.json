@@ -17,6 +17,11 @@
     "require": {
         "php": ">=8.2"
     },
+    "require-dev": {
+        "symfony/yaml": "^7",
+        "phpunit/phpunit": "^11",
+        "friendsofphp/php-cs-fixer": "^3"
+    },
     "replace": {
         "snowplow/referer-parser": "*"
     },
@@ -33,7 +38,13 @@
           "Snowplow\\RefererParser\\Tests\\": "tests/"
         }
     },
-    "require-dev": {
-        "phpunit/phpunit": "^11"
+    "scripts": {
+        "ci": [
+            "@fix:check",
+            "@test"
+        ],
+        "fix": "vendor/bin/php-cs-fixer fix",
+        "fix:check": "vendor/bin/php-cs-fixer fix --dry-run --diff",
+        "test": "vendor/bin/phpunit"
     }
 }

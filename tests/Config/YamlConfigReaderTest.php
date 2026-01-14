@@ -5,13 +5,13 @@ use Snowplow\RefererParser\Config\YamlConfigReader;
 
 class YamlConfigReaderTest extends AbstractConfigReaderTest
 {
-    protected function createConfigReader($fileName)
-    {
-        return new YamlConfigReader($fileName);
-    }
-    
-    protected function createConfigReaderFromFile()
-    {
-        return $this->createConfigReader(__DIR__ . '/../../../../../data/referers.yml');
-    }
+	protected function createConfigReader(string $fileName): YamlConfigReader
+	{
+		return new YamlConfigReader($fileName);
+	}
+
+	protected function createConfigReaderFromFile(): YamlConfigReader
+	{
+		return $this->createConfigReader(dirname(__DIR__, 2) . '/data/referers.yml');
+	}
 }

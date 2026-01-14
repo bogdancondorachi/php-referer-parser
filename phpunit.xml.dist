@@ -1,0 +1,27 @@
+<phpunit
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+	colors="true"
+	displayDetailsOnIncompleteTests="true"
+	displayDetailsOnSkippedTests="true"
+	displayDetailsOnTestsThatTriggerDeprecations="true"
+	displayDetailsOnTestsThatTriggerErrors="true"
+	displayDetailsOnTestsThatTriggerNotices="true"
+	displayDetailsOnTestsThatTriggerWarnings="true"
+	failOnDeprecation="false"
+	failOnEmptyTestSuite="true"
+	failOnIncomplete="true"
+	failOnNotice="true"
+	failOnRisky="true"
+	failOnWarning="true"
+	stderr="true"
+	cacheDirectory=".phpunit.cache"
+>
+  <testsuites>
+    <testsuite name="Tests">
+      <directory>./tests/</directory>
+      <exclude>./tests/AbstractParserTest.php</exclude>
+      <exclude>./tests/Config/AbstractConfigReaderTest.php</exclude>
+    </testsuite>
+  </testsuites>
+</phpunit>
