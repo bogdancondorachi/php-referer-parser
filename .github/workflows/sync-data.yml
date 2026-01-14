@@ -15,16 +15,16 @@ jobs:
 
       - name: Download referers-latest.yaml
         run: |
-          curl -sS -o data/referer.yml https://s3-eu-west-1.amazonaws.com/snowplow-hosted-assets/third-party/referer-parser/referers-latest.yaml
+          curl -sS -o data/referers.yml https://s3-eu-west-1.amazonaws.com/snowplow-hosted-assets/third-party/referer-parser/referers-latest.yaml
 
       - name: Download referers-latest.json
         run: |
-          curl -sS -o data/referer.json https://s3-eu-west-1.amazonaws.com/snowplow-hosted-assets/third-party/referer-parser/referers-latest.json
+          curl -sS -o data/referers.json https://s3-eu-west-1.amazonaws.com/snowplow-hosted-assets/third-party/referer-parser/referers-latest.json
 
       - name: Check for changes
         id: check_changes
         run: |
-          git add data/referer.yml data/referer.json
+          git add data/referers.yml data/referers.json
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
@@ -35,7 +35,9 @@ jobs:
         uses: EndBug/add-and-commit@v9
         if: steps.check_changes.outputs.changed == 'true'
         with:
-          add: 'data/referer.yml,data/referer.json'
+          add: |
+            data/referers.yml
+            data/referers.json
           message: 'sync: referer data [skip ci]'
           author_name: Bogdan Condorachi
           author_email: bogdan.condorachi@gmail.com
