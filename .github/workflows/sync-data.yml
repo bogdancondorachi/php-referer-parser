@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       changes-made: ${{ steps.check_changes.outputs.changed }}
+      commit-sha: ${{ steps.commit.outputs.commit_sha }}
 
     steps:
       - name: Checkout repository
@@ -29,10 +30,19 @@ jobs:
           || curl -fsS -o data/referers.json \
             "https://s3-eu-west-1.amazonaws.com/snowplow-hosted-assets/third-party/referer-parser/referers-$(date -d yesterday +%Y%m%d).json"
 
+      - name: Download referer tests
+        run: |
+          curl -fsS -o tests/referer-tests.json \
+            "https://raw.githubusercontent.com/snowplow-referer-parser/referer-parser/refs/heads/master/resources/referer-tests.json"
+
       - name: Check for changes
         id: check_changes
         run: |
-          git add data/referers.yml data/referers.json
+          git add \
+            data/referers.yml \
+            data/referers.json \
+            tests/referer-tests.json
+
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
@@ -42,10 +52,12 @@ jobs:
       - name: Commit and push changes
         uses: EndBug/add-and-commit@v9
         if: steps.check_changes.outputs.changed == 'true'
+        id: commit
         with:
           add: |
             data/referers.yml
             data/referers.json
+            tests/referer-tests.json
           message: 'sync: referers data [skip ci]'
           author_name: Bogdan Condorachi
           author_email: bogdan.condorachi@gmail.com
@@ -65,15 +77,16 @@ jobs:
 
       - name: Create new tag
         run: |
-          latest_tag=$(git tag --list 'v*.*.*' --sort=-v:refname | head -n1)
+          git fetch --tags
+
+          latest_tag=$(git tag --list 'v*.*.*' --sort=-v:refname | head -n1 || echo "v0.0.0")
 
           IFS='.' read -r major minor patch <<< "${latest_tag#v}"
 
           patch=$((patch + 1))
           next_tag="v$major.$minor.$patch"
 
-          git tag "$next_tag"
-
+          git tag "$next_tag" "${{ needs.sync.outputs.commit-sha }}"
           git push origin "$next_tag"
 
           echo "Created new tag: $next_tag"
