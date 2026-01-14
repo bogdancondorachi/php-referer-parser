@@ -55,7 +55,7 @@ final class Parser
 		}
 
 		$parts = parse_url($url);
-		if ($parts === false || !isset($parts['scheme'], $parts['host']) || !in_array(strtolower($parts['scheme']), ['http', 'https'], true)) {
+		if ($parts === false || !isset($parts['scheme'], $parts['host']) || !in_array(strtolower($parts['scheme']), ['http', 'https', 'android-app'], true)) {
 			return null;
 		}
 
