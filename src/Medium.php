@@ -12,4 +12,6 @@ enum Medium: string
 	case SEARCH   = 'search';
 	case SOCIAL   = 'social';
 	case EMAIL    = 'email';
+	case PAID     = 'paid';
+	case CHATBOT  = 'chatbot';
 }
