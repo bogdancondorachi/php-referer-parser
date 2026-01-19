@@ -12,6 +12,6 @@ class JsonConfigReaderTest extends AbstractConfigReaderTest
 
 	protected function createConfigReaderFromFile(): JsonConfigReader
 	{
-		return $this->createConfigReader(dirname(__DIR__, 2) . '/data/referers.json');
+		return $this->createConfigReader(__DIR__ . '/../../data/referers.json');
 	}
 }

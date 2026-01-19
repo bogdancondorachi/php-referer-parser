@@ -1,6 +1,7 @@
 <?php
 namespace Snowplow\RefererParser\Tests;
 
+use PHPUnit\Framework\Attributes\BeforeClass;
 use Snowplow\RefererParser\Config\YamlConfigReader;
 use Snowplow\RefererParser\Parser;
 
@@ -8,9 +9,10 @@ class YamlParserTest extends AbstractParserTest
 {
 	private static YamlConfigReader $reader;
 
-	public static function setUpBeforeClass(): void
+	#[BeforeClass]
+	public static function setUpReader(): void
 	{
-		static::$reader = new YamlConfigReader(dirname(__DIR__, 1) . '/data/referers.yml');
+		static::$reader = new YamlConfigReader(__DIR__ . '/../data/referers.yml');
 	}
 
 	protected function createParser(array $internalHosts = []): Parser

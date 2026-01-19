@@ -1,6 +1,8 @@
 <?php
 namespace Snowplow\RefererParser\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Snowplow\RefererParser\Medium;
 use Snowplow\RefererParser\Parser;
@@ -17,10 +19,39 @@ abstract class AbstractParserTest extends TestCase
 		]);
 	}
 
-	/**
-	 * @param string[] $internalHosts
-	 */
 	abstract protected function createParser(array $internalHosts = []): Parser;
+
+	#[DataProvider('getTestData')]
+	#[Test]
+	public function testRefererParsing(mixed $_, ?string $refererUrl, ?string $medium, ?string $source, ?string $searchTerm, bool $isKnown): void
+	{
+		$referer = $this->parser->parse($refererUrl, 'http://www.snowplowanalytics.com/');
+
+		$this->assertTrue($referer->isValid());
+		$this->assertSame($isKnown, $referer->isKnown());
+		$this->assertSame($source, $referer->getSource());
+		$this->assertSame($medium, $referer->getMedium()?->value);
+		$this->assertSame($searchTerm, $referer->getSearchTerm());
+	}
+
+	#[DataProvider('getErrorData')]
+	#[Test]
+	public function testHandleErrors(?string $refererUrl, ?string $internalUrl): void
+	{
+		$referer = $this->parser->parse($refererUrl, $internalUrl);
+
+		$this->assertFalse($referer->isValid());
+		$this->assertFalse($referer->isKnown());
+	}
+
+	#[Test]
+	public function testCustomInternalHosts(): void
+	{
+		$parser = $this->createParser(['google.com']);
+
+		$this->assertSame(Medium::INTERNAL->value, $parser->parse('http://google.com')->getMedium()?->value);
+		$this->assertSame(Medium::SEARCH->value, $this->parser->parse('http://google.com')->getMedium()?->value);
+	}
 
 	public static function getTestData(): array
 	{
@@ -34,21 +65,6 @@ abstract class AbstractParserTest extends TestCase
 		return $arguments;
 	}
 
-	/**
-	 * @dataProvider getTestData
-	 * @param mixed $_
-	 */
-	public function testRefererParsing($_, ?string $refererUrl, ?string $medium, ?string $source, ?string $searchTerm, bool $isKnown): void
-	{
-		$referer = $this->parser->parse($refererUrl, 'http://www.snowplowanalytics.com/');
-
-		$this->assertTrue($referer->isValid());
-		$this->assertSame($isKnown, $referer->isKnown());
-		$this->assertSame($source, $referer->getSource());
-		$this->assertSame($medium, $referer->getMedium()?->value);
-		$this->assertSame($searchTerm, $referer->getSearchTerm());
-	}
-
 	public static function getErrorData(): array
 	{
 		return [
@@ -56,24 +72,5 @@ abstract class AbstractParserTest extends TestCase
 			[null, null],
 			['invalidString', 'http://google.de'],
 		];
-	}
-
-	/**
-	 * @dataProvider getErrorData
-	 */
-	public function testHandleErrors(?string $refererUrl, ?string $internalUrl): void
-	{
-		$referer = $this->parser->parse($refererUrl, $internalUrl);
-
-		$this->assertFalse($referer->isValid());
-		$this->assertFalse($referer->isKnown());
-	}
-
-	public function testCustomInternalHosts(): void
-	{
-		$parser = $this->createParser(['google.com']);
-
-		$this->assertSame(Medium::INTERNAL->value, $parser->parse('http://google.com')->getMedium()?->value);
-		$this->assertSame(Medium::SEARCH->value, $this->parser->parse('http://google.com')->getMedium()?->value);
 	}
 }
