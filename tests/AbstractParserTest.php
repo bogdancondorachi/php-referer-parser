@@ -30,7 +30,7 @@ abstract class AbstractParserTest extends TestCase
 		$this->assertTrue($referer->isValid());
 		$this->assertSame($isKnown, $referer->isKnown());
 		$this->assertSame($source, $referer->getSource());
-		$this->assertSame($medium, $referer->getMedium()?->value);
+		$this->assertSame($medium, $referer->getMedium());
 		$this->assertSame($searchTerm, $referer->getSearchTerm());
 	}
 
@@ -49,8 +49,8 @@ abstract class AbstractParserTest extends TestCase
 	{
 		$parser = $this->createParser(['google.com']);
 
-		$this->assertSame(Medium::INTERNAL->value, $parser->parse('http://google.com')->getMedium()?->value);
-		$this->assertSame(Medium::SEARCH->value, $this->parser->parse('http://google.com')->getMedium()?->value);
+		$this->assertSame(Medium::INTERNAL->value, $parser->parse('http://google.com')->getMedium());
+		$this->assertSame(Medium::SEARCH->value, $this->parser->parse('http://google.com')->getMedium());
 	}
 
 	public static function getTestData(): array
